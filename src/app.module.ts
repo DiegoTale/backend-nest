@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -11,17 +12,18 @@ import { ConfigModule } from '@nestjs/config';
     TypeOrmModule.forRoot({
       /** Conexion a BD */
       type: 'postgres',
-      host: process.env.DB_HOST,
-      port: +process.env.DB_PORT,
-      database: process.env.POSTGRES_DB, 
-      username: process.env.POSTGRES_USER, 
+      host: process.env.POSTGRES_URL,
+      port: +process.env.POSTGRES_PORT,
+      database: process.env.POSTGRES_DB,
+      username: process.env.POSTGRES_USER,
       password: process.env.POSTGRES_PASSWORD,
       autoLoadEntities: true,
       synchronize: true,
-    }), 
-    UserModule 
+    }),
+    UserModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}

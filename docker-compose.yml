@@ -5,11 +5,10 @@ services:
     image: postgres:15.3
     restart: always
     environment:
-      # POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-    container_name: userdb
     volumes:
       - ./postgres:/var/lib/postgres/data
     ports:
-      - 5432:5432
+      - 5433:5432
