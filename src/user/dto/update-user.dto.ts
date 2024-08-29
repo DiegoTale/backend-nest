@@ -5,6 +5,7 @@ import {
   IsNumber,
   IsOptional,
   IsString,
+  IsUUID,
   MinLength,
 } from 'class-validator';
 
@@ -30,4 +31,8 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
   @IsOptional()
   @IsNumber({})
   telefono: number;
+
+  @IsOptional()
+  @IsUUID('4', { message: 'El ID del rol debe de ser un UUID valido' })
+  role: string;
 }

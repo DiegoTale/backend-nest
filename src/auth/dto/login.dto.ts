@@ -1,6 +1,6 @@
 import { IsString, MinLength } from 'class-validator';
 
-export class LoginDto {
+export class LoginUserDto {
   @IsString()
   username: string;
 

@@ -1,36 +1,44 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { LoginDto } from './dto/login.dto';
-import { InjectRepository } from '@nestjs/typeorm';
-import { User } from 'src/user/entities/user.entity';
-import { Repository } from 'typeorm';
+import { LoginUserDto } from './dto/login.dto';
 import { UserService } from 'src/user/user.service';
 import { comparePwd } from 'src/common/utis/bcrypt';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
   constructor(
-    // @InjectRepository(User)
     private _userService: UserService,
+    private _jwtService: JwtService,
   ) {}
-  async login(loginAuthDto: LoginDto) {
-    // try {
+
+  async login(loginAuthDto: LoginUserDto) {
     const user = await this._userService.findOneByUsername(
       loginAuthDto.username,
     );
 
     if (!user) throw new UnauthorizedException();
+    // console.log(user);
 
     if (user) {
-      const isValid = await comparePwd(loginAuthDto.password, user.password);
+      const isValid = comparePwd(loginAuthDto.password, user.password);
+
       if (isValid) {
-        return user;
+        const payload = { sub: user.id };
+
+        const token = await this.getToken(payload);
+
+        return {
+          access_token: token,
+        };
       }
       console.log(isValid);
       throw new UnauthorizedException(`El usuario o contrasena incorrecta`);
     }
     return user;
-    // } catch (error) {
-    //   console.log({ message: 'Unauthorized', statusCode: 401 });
-    // }
+  }
+
+  getToken(payload: any) {
+    const token = this._jwtService.signAsync(payload);
+    return token;
   }
 }

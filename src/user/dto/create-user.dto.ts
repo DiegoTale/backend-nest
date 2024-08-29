@@ -3,6 +3,7 @@ import {
   IsNumber,
   IsOptional,
   IsString,
+  IsUUID,
   MinLength,
 } from 'class-validator';
 
@@ -31,4 +32,8 @@ export class CreateUserDto {
   @IsString()
   @MinLength(5, { message: 'Tiene que tener por lo menos una longitud de 5' })
   password: string;
+
+  @IsOptional()
+  @IsUUID('4', { message: 'El ID del rol debe de ser un UUID valido' })
+  role: string;
 }
